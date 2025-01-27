@@ -1,4 +1,4 @@
-# Created at 2025-01-27T11:27:29.781
+# Created at 2025-01-27T19:00:59.916
 Boot Manifest-JAR contains absolute paths in classpath 'F:\TestProjetos\BlockChainLLM\target\test-classes'
 Hint: <argLine>-Djdk.net.URLClassPath.disableClassPathURLCheck=true</argLine>
 'other' has different root

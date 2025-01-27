@@ -1,1 +1,3 @@
+com\kerbino\bcpredict\services\CoinStatsService.class
+com\kerbino\bcpredict\controller\CoinStatsController.class
 com\kerbino\bcpredict\BcpredictApplication.class
