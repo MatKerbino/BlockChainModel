@@ -1,4 +1,4 @@
-package com.kerbino.bcpredict.services;
+package com.kerbino.bcpredict.services.CoinServices;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -8,6 +8,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 import org.springframework.stereotype.Service;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -51,14 +52,14 @@ public class CoinStatsService {
         }
     }
 
-    public JsonNode getCoinList() throws IOException {
+    public List<JsonNode> getCoinList() throws IOException {
         changeUrl("https://api.coingecko.com/api/v3/coins/list");
         Response response = client.newCall(this.request).execute();
         if (response.isSuccessful()) {
             assert response.body() != null;
             String jsonResponse = response.body().string();  // Obtendo o corpo da resposta como string
             ObjectMapper mapper = new ObjectMapper();  // Convertendo para JsonArray
-            return mapper.readTree(jsonResponse);
+            return Collections.singletonList(mapper.readTree(jsonResponse));
         } else {
             throw new IOException("Erro ao obter a lista de moedas");
         }
