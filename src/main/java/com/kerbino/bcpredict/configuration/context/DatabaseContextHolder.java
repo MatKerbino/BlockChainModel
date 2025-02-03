@@ -1,4 +1,4 @@
-package com.kerbino.bcpredict.configuration;
+package com.kerbino.bcpredict.configuration.context;
 
 public class DatabaseContextHolder {
     private static final ThreadLocal<String> CONTEXT = new ThreadLocal<>();

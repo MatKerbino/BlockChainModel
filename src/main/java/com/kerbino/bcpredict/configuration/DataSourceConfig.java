@@ -1,11 +1,12 @@
 package com.kerbino.bcpredict.configuration;
 
+import com.kerbino.bcpredict.configuration.context.DatabaseContextHolder;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
 
 import javax.sql.DataSource;
 import java.util.HashMap;
@@ -39,5 +40,12 @@ public class DataSourceConfig {
         routingDataSource.setTargetDataSources(targetDataSources);
         routingDataSource.setDefaultTargetDataSource(coinDataSource);
         return routingDataSource;
+    }
+
+    private static class DynamicDataSource extends AbstractRoutingDataSource {
+        @Override
+        protected Object determineCurrentLookupKey() {
+            return DatabaseContextHolder.getCurrentDatabase();
+        }
     }
 }

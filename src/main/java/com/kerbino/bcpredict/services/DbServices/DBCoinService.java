@@ -1,12 +1,11 @@
 package com.kerbino.bcpredict.services.DbServices;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.kerbino.bcpredict.configuration.context.DatabaseContextHolder;
 import com.kerbino.bcpredict.entity.CoinEntities.CoinEntity;
 import com.kerbino.bcpredict.repository.CoinRepositories.DBCoinRepository;
 import com.kerbino.bcpredict.services.CoinServices.CoinCacheService;
 import com.kerbino.bcpredict.services.CoinServices.CoinStatsService;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Persistence;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,25 +16,29 @@ import java.util.List;
 
 @Service
 public class DBCoinService {
+
+    private CoinEntity coinEntity;
+
     @Autowired
     private CoinCacheService coinCacheService;
 
     @Autowired
     private CoinStatsService coinStatsService;
 
-    private final EntityManagerFactory emf = Persistence.createEntityManagerFactory("my-persistance-unit");
-
     @Autowired
     private DBCoinRepository dbCoinRepository;
 
     public List<CoinEntity> getAllCoins() {
+        DatabaseContextHolder.setCurrentDatabase("coin");
         return dbCoinRepository.findAll();
     }
 
     @Transactional
     public boolean addALlCoinList() throws IOException {
+        DatabaseContextHolder.setCurrentDatabase("coin");
+
         try {
-            List<JsonNode> coinList = coinCacheService.getCoinList(coinStatsService);
+            List<JsonNode> coinList = coinCacheService.getCoinList();
             List<CoinEntity> coinsToSave = new ArrayList<>();
 
             for (JsonNode node : coinList) {

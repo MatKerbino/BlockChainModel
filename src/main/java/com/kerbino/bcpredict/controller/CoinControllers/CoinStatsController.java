@@ -18,12 +18,10 @@ import java.util.List;
 @AllArgsConstructor
 public class CoinStatsController {
 
-    private final CoinStatsService coinStatsService;
-    private final CoinCacheService coinCacheService;
+    private CoinStatsService coinStatsService;
+    private CoinCacheService coinCacheService;
 
-    private void CoinStatsService (){
-        coinStatsService.startMonitoring();
-    }
+    private void CoinStatsService (){ coinStatsService.startMonitoring();}
 
     @GetMapping("/status")
     public String getPing() {
@@ -32,7 +30,7 @@ public class CoinStatsController {
 
     @GetMapping("/list")
     public ResponseEntity<List<JsonNode>> getCoinList() throws IOException {
-        List<JsonNode> coin = coinCacheService.getCoinList(coinStatsService);
+        List<JsonNode> coin = coinCacheService.getCoinList();
         return ResponseEntity.ok(coin);
     }
 

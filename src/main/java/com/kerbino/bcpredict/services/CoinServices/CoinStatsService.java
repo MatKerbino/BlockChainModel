@@ -85,13 +85,9 @@ public class CoinStatsService {
 
 
     public JsonNode getCoinPrice(String id, String typeCurrency) throws IOException {
-        changeUrl(
-                "https://api.coingecko.com/api/v3/simple/price?ids="
-                        + id
-                        + "&vs_currencies="
-                        + typeCurrency
-        );
-        //O id deve ser sem espaços
+        changeUrl(String.format(
+                "https://api.coingecko.com/api/v3/simple/price?ids=%s&vs_currencies=%s", id, typeCurrency
+        ));
         Response response = client.newCall(this.request).execute();
         if (response.isSuccessful()){
             assert response.body() != null;
@@ -100,6 +96,24 @@ public class CoinStatsService {
             return mapper.readTree(jsonResponse);
         } else {
             throw new IOException("Erro ao obter preço");
+        }
+    }
+
+    public List<JsonNode> getPriceInTime(String id, String typeCurrency, Integer timeSpan, Integer dailyOr) throws IOException {
+        changeUrl(String.format(
+                "https://api.coingecko.com/api/v3/coins/%s/market_chart?vs_currency=%s&days=%d"
+                        + (dailyOr > 0 ? "&interval=daily" : "")
+                        + "&precision=full",
+                id, typeCurrency, timeSpan
+        ));
+        Response response = client.newCall(this.request).execute();
+        if (response.isSuccessful()){
+            assert response.body() != null;
+            String jsonResponse = response.body().string();
+            ObjectMapper mapper = new ObjectMapper();
+            return Collections.singletonList(mapper.readTree(jsonResponse));
+        } else {
+            throw new IOException("Erro ao obter preços");
         }
     }
 }
