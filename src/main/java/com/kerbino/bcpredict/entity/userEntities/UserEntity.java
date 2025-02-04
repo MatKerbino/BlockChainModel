@@ -1,8 +1,7 @@
-package com.kerbino.bcpredict.entity.UserEntities;
+package com.kerbino.bcpredict.entity.userEntities;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.proxy.HibernateProxy;
 
 @Entity
 @Table(name = "UsersLoginData")

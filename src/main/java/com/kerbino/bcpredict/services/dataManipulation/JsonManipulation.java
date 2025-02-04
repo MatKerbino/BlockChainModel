@@ -1,4 +1,4 @@
-package com.kerbino.bcpredict.services.DataManipulation;
+package com.kerbino.bcpredict.services.dataManipulation;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @NoArgsConstructor

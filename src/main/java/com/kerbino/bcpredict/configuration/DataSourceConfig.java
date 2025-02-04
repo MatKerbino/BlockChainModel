@@ -17,21 +17,21 @@ public class DataSourceConfig {
 
     @Bean(name = "coinDataSource")
     @ConfigurationProperties(prefix = "spring.datasource.money")
-    public DataSource DBCoinConfig() {
+    public DataSource coinDataSource() {
         return DataSourceBuilder.create().build();
     }
 
     @Bean(name = "userDataSource")
     @ConfigurationProperties(prefix = "spring.datasource.user")
-    public DataSource UserConfig() {
+    public DataSource userDataSource() {
         return DataSourceBuilder.create().build();
     }
 
     @Bean
     public DataSource dynamicDataSource(
-            @Qualifier("coinDataSource") DataSource coinDataSource,
-            @Qualifier("userDataSource") DataSource userDataSource
-    ) {
+        @Qualifier("coinDataSource") DataSource coinDataSource,                                
+        @Qualifier("userDataSource") DataSource userDataSource
+        ) {
         Map<Object, Object> targetDataSources = new HashMap<>();
         targetDataSources.put("coin", coinDataSource);
         targetDataSources.put("user", userDataSource);

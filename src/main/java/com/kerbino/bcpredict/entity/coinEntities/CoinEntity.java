@@ -1,4 +1,4 @@
-package com.kerbino.bcpredict.entity.CoinEntities;
+package com.kerbino.bcpredict.entity.coinEntities;
 
 import jakarta.persistence.*;
 import lombok.*;

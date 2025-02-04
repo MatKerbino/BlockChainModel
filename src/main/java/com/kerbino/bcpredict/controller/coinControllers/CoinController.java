@@ -1,13 +1,10 @@
-package com.kerbino.bcpredict.controller.CoinControllers;
+package com.kerbino.bcpredict.controller.coinControllers;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.kerbino.bcpredict.services.CoinServices.CoinCacheService;
-import com.kerbino.bcpredict.services.CoinServices.CoinStatsService;
-import lombok.AllArgsConstructor;
+import com.kerbino.bcpredict.services.coinServices.CoinCacheService;
+import com.kerbino.bcpredict.services.coinServices.CoinStatsService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -15,23 +12,21 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/coin")
-@AllArgsConstructor
-public class CoinStatsController {
+@RequiredArgsConstructor
+public class CoinController {
 
-    private CoinStatsService coinStatsService;
-    private CoinCacheService coinCacheService;
-
-    private void CoinStatsService (){ coinStatsService.startMonitoring();}
+    private final CoinStatsService coinStatsService;
+    private final CoinCacheService coinCacheService;
 
     @GetMapping("/status")
-    public String getPing() {
-        return coinStatsService.apiIsActive ? "Is active" : "Error. Shuting down...";
+    public ResponseEntity<String> getStatus() {
+        return ResponseEntity.ok(coinStatsService.isApiActive() ? "API is active" : "API is not active");
     }
 
     @GetMapping("/list")
     public ResponseEntity<List<JsonNode>> getCoinList() throws IOException {
-        List<JsonNode> coin = coinCacheService.getCoinList();
-        return ResponseEntity.ok(coin);
+        List<JsonNode> coinList = coinCacheService.getCoinList();
+        return ResponseEntity.ok(coinList);
     }
 
     @GetMapping("/pricing/{id}/{typeCurrency}")
@@ -43,5 +38,4 @@ public class CoinStatsController {
         List<JsonNode> coins = Collections.singletonList(coinStatsService.getCoinPrice(id, typeCurrency));
         return ResponseEntity.ok(coins);
     }
-
 }

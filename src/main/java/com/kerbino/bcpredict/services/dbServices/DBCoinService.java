@@ -1,11 +1,11 @@
-package com.kerbino.bcpredict.services.DbServices;
+package com.kerbino.bcpredict.services.dbServices;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.kerbino.bcpredict.configuration.context.DatabaseContextHolder;
-import com.kerbino.bcpredict.entity.CoinEntities.CoinEntity;
-import com.kerbino.bcpredict.repository.CoinRepositories.DBCoinRepository;
-import com.kerbino.bcpredict.services.CoinServices.CoinCacheService;
-import com.kerbino.bcpredict.services.CoinServices.CoinStatsService;
+import com.kerbino.bcpredict.entity.coinEntities.CoinEntity;
+import com.kerbino.bcpredict.repository.coinRepositories.DBCoinRepository;
+import com.kerbino.bcpredict.services.coinServices.CoinCacheService;
+import com.kerbino.bcpredict.services.coinServices.CoinStatsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

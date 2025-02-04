@@ -15,7 +15,7 @@ import javax.sql.DataSource;
 
 @Configuration
 @EnableJpaRepositories(
-        basePackages = "com.kerbino.bcpredict.repository.CoinRepositories",
+        basePackages = "com.kerbino.bcpredict.repository.coinRepositories",
         entityManagerFactoryRef = "moneyEntityManagerFactory",
         transactionManagerRef = "moneyTransactionManager"
 )
@@ -24,11 +24,10 @@ public class CoinJpaConfig {
     @Bean
     public LocalContainerEntityManagerFactoryBean moneyEntityManagerFactory(
             @Qualifier("coinDataSource") DataSource dataSource,
-            JpaProperties jpaProperties,
-            LocalContainerEntityManagerFactoryBean localContainerEntityManagerFactoryBean) {
+            JpaProperties jpaProperties) {
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setDataSource(dataSource);
-        em.setPackagesToScan("com.kerbino.bcpredict.repository.CoinEntities");
+        em.setPackagesToScan("com.kerbino.bcpredict.entity.coinEntities");
         em.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
         em.setJpaPropertyMap(jpaProperties.getProperties());
         return em;
@@ -36,7 +35,7 @@ public class CoinJpaConfig {
 
     @Bean
     public PlatformTransactionManager moneyTransactionManager(
-            @Qualifier("moneyEntityManagerFactory")EntityManagerFactory emf
+            @Qualifier("moneyEntityManagerFactory") EntityManagerFactory emf
     ) {
         return new JpaTransactionManager(emf);
     }

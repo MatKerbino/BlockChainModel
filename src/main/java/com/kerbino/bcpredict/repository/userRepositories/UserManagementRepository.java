@@ -1,7 +1,7 @@
-package com.kerbino.bcpredict.repository.UserRepositories;
+package com.kerbino.bcpredict.repository.userRepositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import com.kerbino.bcpredict.entity.UserEntities.UserEntity;
+import com.kerbino.bcpredict.entity.userEntities.UserEntity;
 import org.springframework.stereotype.Repository;
 
 @Repository
