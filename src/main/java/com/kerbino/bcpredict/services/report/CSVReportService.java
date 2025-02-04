@@ -14,6 +14,11 @@ public class CSVReportService {
 
     private final DBCoinRepository dbCoinRepository;
 
+    /**
+     * Gera um relatório CSV baseado nos dados de moedas persistidos.
+     *
+     * @return Relatório CSV como array de bytes.
+     */
     public byte[] generateCSVReport() {
         List<CoinEntity> coins = dbCoinRepository.findAll();
 

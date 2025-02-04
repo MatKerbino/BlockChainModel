@@ -6,6 +6,9 @@ import com.kerbino.bcpredict.entity.coin.CoinEntity;
 import com.kerbino.bcpredict.repository.coin.DBCoinRepository;
 import com.kerbino.bcpredict.services.coin.CoinCacheService;
 import com.kerbino.bcpredict.services.coin.CoinStatsService;
+import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,21 +17,32 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class DBCoinService {
 
-    private CoinEntity coinEntity;
+    private static final Logger logger = LoggerFactory.getLogger(DBCoinService.class);
+    private final CoinCacheService coinCacheService;
+    private final CoinStatsService coinStatsService;
+    private final DBCoinRepository dbCoinRepository;
 
-    private CoinCacheService coinCacheService;
-    private CoinStatsService coinStatsService;
-    private DBCoinRepository dbCoinRepository;
-
+    /**
+     * Recupera todas as moedas do banco de dados.
+     *
+     * @return Lista de CoinEntity.
+     */
     public List<CoinEntity> getAllCoins() {
         DatabaseContextHolder.setCurrentDatabase("coin");
         return dbCoinRepository.findAll();
     }
 
+    /**
+     * Consulta a lista de moedas na API (via cache) e persiste os dados no banco.
+     *
+     * @return true se a operação for bem-sucedida.
+     * @throws IOException Se ocorrer erro na consulta da API.
+     */
     @Transactional
-    public boolean addALlCoinList() throws IOException {
+    public boolean addAllCoinList() throws IOException {
         DatabaseContextHolder.setCurrentDatabase("coin");
 
         List<JsonNode> coinList = coinCacheService.getCoinList();
@@ -49,6 +63,7 @@ public class DBCoinService {
         }
 
         dbCoinRepository.saveAll(coinsToSave);
+        logger.info("Saved {} coins into the database", coinsToSave.size());
         return true;
     }
 }

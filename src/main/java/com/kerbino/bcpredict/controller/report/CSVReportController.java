@@ -25,6 +25,9 @@ public class CSVReportController {
     private final CSVReportService csvReportService;
     private static final Logger logger = LoggerFactory.getLogger(CSVReportController.class);
 
+    /**
+     * Rota para download direto do relatório CSV.
+     */
     @GetMapping("/coins")
     public ResponseEntity<byte[]> generateCoinReport() {
         byte[] csvData = csvReportService.generateCSVReport();
@@ -34,14 +37,18 @@ public class CSVReportController {
         return ResponseEntity.ok().headers(headers).body(csvData);
     }
 
+    /**
+     * Rota que gera o relatório CSV e o salva na pasta "savedData" com um timestamp no nome do arquivo.
+     *
+     * @return Mensagem com o caminho completo do arquivo salvo.
+     */
     @GetMapping("/coins/save")
     public ResponseEntity<String> saveCSVReport() {
         try {
             byte[] csvData = csvReportService.generateCSVReport();
-            
             String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+            Path dirPath = Paths.get("src/main/java/com/kerbino/bcpredict/savedData");
             
-            Path dirPath = Paths.get("savedData");
             if (!Files.exists(dirPath)) {
                 Files.createDirectories(dirPath);
             }
@@ -49,8 +56,10 @@ public class CSVReportController {
             String fileName = "coins_report_" + timestamp + ".csv";
             Path filePath = dirPath.resolve(fileName);
             Files.write(filePath, csvData, StandardOpenOption.CREATE);
+
             logger.info("CSV report saved at {}", filePath.toAbsolutePath());
-            return ResponseEntity.ok("CSV report saved successfully: " + filePath.toAbsolutePath().toString());
+
+            return ResponseEntity.ok("CSV report saved successfully: " + filePath.toAbsolutePath());
         } catch (IOException ex) {
             logger.error("Error saving CSV report", ex);
             throw new RuntimeException("Error saving CSV report: " + ex.getMessage());

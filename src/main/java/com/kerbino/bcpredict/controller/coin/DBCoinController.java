@@ -16,11 +16,20 @@ public class DBCoinController {
 
     private final DBCoinService dbCoinService;
 
+    /**
+     * Endpoint para listar todas as moedas persistidas.
+     */
     @GetMapping("/coins")
     public ResponseEntity<List<CoinEntity>> getAllCoins() {
         return ResponseEntity.ok(dbCoinService.getAllCoins());
     }
 
+    /**
+     * Endpoint para atualizar os dados de moedas a partir da API e persistir no banco.
+     *
+     * @return true se a atualização foi bem-sucedida.
+     * @throws IOException Se ocorrer erro na comunicação com a API.
+     */
     @PutMapping("/coins")
     public ResponseEntity<Boolean> updateCoinData() throws IOException {
         boolean success = dbCoinService.addAllCoinList();

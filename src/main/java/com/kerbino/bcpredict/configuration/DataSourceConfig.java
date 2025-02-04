@@ -42,6 +42,10 @@ public class DataSourceConfig {
         return routingDataSource;
     }
 
+    /**
+     * DynamicDataSource: determina a datasource atual com base no contexto.
+     */
+
     private static class DynamicDataSource extends AbstractRoutingDataSource {
         @Override
         protected Object determineCurrentLookupKey() {

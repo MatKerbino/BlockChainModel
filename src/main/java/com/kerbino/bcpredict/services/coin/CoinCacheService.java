@@ -1,61 +1,82 @@
 package com.kerbino.bcpredict.services.coin;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.kerbino.bcpredict.utilities.JsonManipulation;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
 public class CoinCacheService {
+
+    private static final Logger logger = LoggerFactory.getLogger(CoinCacheService.class);
     private List<JsonNode> coinList;
-    private final Map<String, List<JsonNode>> coinPrice = new HashMap<>();
-    private static long lastUpdated;
-    private final long CACHE_DURATION = TimeUnit.HOURS.toMillis(24);
+    private long coinListTimestamp;
+    private final long CACHE_DURATION_MS = TimeUnit.HOURS.toMillis(24);
+    private final Map<String, CacheEntry<List<JsonNode>>> coinPriceCache = new HashMap<>();
 
     private final CoinStatsService coinStatsService;
 
+    /**
+     * Retorna a lista de moedas a partir do cache ou, se o cache estiver expirado, consulta a API.
+     *
+     * @return Lista de dados das moedas.
+     * @throws IOException Se ocorrer erro na consulta à API.
+     */
     public List<JsonNode> getCoinList() throws IOException {
-        if (coinList == null || (System.currentTimeMillis() - lastUpdated) > CACHE_DURATION) {
+        long now = System.currentTimeMillis();
+        if (coinList == null || (now - coinListTimestamp) > CACHE_DURATION_MS) {
+            logger.info("Fetching fresh coin list from API.");
             coinList = coinStatsService.getCoinList();
-            lastUpdated = System.currentTimeMillis();
+            coinListTimestamp = now;
+        } else {
+            logger.info("Returning cached coin list.");
         }
         return coinList;
     }
 
-    public List<JsonNode> getPriceList(String id, String typeCurrency, Integer timesSpan, Integer dailyOr) throws IOException {
-        Instant now = Instant.now();
-        Instant pastDays = now.minus(timesSpan, ChronoUnit.DAYS);
-        List<JsonNode> result = JsonManipulation.filterCoinJsonByTimestamp(
-                coinPrice.getOrDefault(id, new ArrayList<>()),
-                pastDays.toEpochMilli(),
-                now.toEpochMilli()
-        );
+    /**
+     * Retorna dados de preços para uma moeda específica a partir do cache ou consulta a API se necessário.
+     *
+     * @param id             Identificador da moeda.
+     * @param typeCurrency   Tipo de moeda.
+     * @param timeSpanInDays Intervalo de tempo (em dias) para os dados históricos.
+     * @param dailyOr        Indicador para dados diários.
+     * @return Lista de dados de preços.
+     * @throws IOException Se ocorrer erro na consulta à API.
+     */
+    public List<JsonNode> getPriceList(String id, String typeCurrency, int timeSpanInDays, int dailyOr) throws IOException {
+        long now = System.currentTimeMillis();
+        CacheEntry<List<JsonNode>> entry = coinPriceCache.get(id);
 
-        if (!coinPrice.containsKey(id) || coinPrice.get(id).isEmpty() || result.isEmpty()) {
-            coinPrice.put(id, coinStatsService.getPriceInTime(id, typeCurrency, timesSpan, dailyOr));
+        if (entry == null || (now - entry.timestamp) > CACHE_DURATION_MS) {
+            logger.info("Cache miss for coin id {}. Fetching price data from API.", id);
+            List<JsonNode> priceData = coinStatsService.getPriceInTime(id, typeCurrency, timeSpanInDays, dailyOr);
+            coinPriceCache.put(id, new CacheEntry<>(priceData, now));
+            return priceData;
         } else {
-            coinPrice.put(id, result);
-        }
-        return coinPrice.get(id);
-    }
-
-    /*
-    Fazer o sistema de cache para o preço das moedas
-    public List<JsonNode> getCoinPrice (CoinStatsService coinStatsService, String id, String typeCurrency) throws IOException {
-
-        if (coinPrice.contains(id)){
-            return
+            logger.info("Returning cached price data for coin id {}.", id);
+            return entry.data;
         }
     }
-    */
+
+    /**
+     * Classe interna para armazenar os dados de cache e o timestamp associado.
+     */
+    private static class CacheEntry<T> {
+        private final T data;
+        private final long timestamp;
+
+        CacheEntry(T data, long timestamp) {
+            this.data = data;
+            this.timestamp = timestamp;
+        }
+    }
 }
