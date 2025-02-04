@@ -1,4 +1,4 @@
-package com.kerbino.bcpredict.entity.userEntities;
+package com.kerbino.bcpredict.entity.user;
 
 import jakarta.persistence.*;
 import lombok.*;

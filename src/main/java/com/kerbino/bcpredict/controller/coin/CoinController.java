@@ -1,7 +1,7 @@
-package com.kerbino.bcpredict.controller.coinControllers;
+package com.kerbino.bcpredict.controller.coin;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.kerbino.bcpredict.services.coinServices.CoinCacheService;
-import com.kerbino.bcpredict.services.coinServices.CoinStatsService;
+import com.kerbino.bcpredict.services.coin.CoinCacheService;
+import com.kerbino.bcpredict.services.coin.CoinStatsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

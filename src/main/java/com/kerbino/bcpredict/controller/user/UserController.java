@@ -1,4 +1,4 @@
-package com.kerbino.bcpredict.controller.userControllers;
+package com.kerbino.bcpredict.controller.user;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;

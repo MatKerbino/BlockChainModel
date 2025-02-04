@@ -1,6 +1,6 @@
-package com.kerbino.bcpredict.repository.coinRepositories;
+package com.kerbino.bcpredict.repository.coin;
 
-import com.kerbino.bcpredict.entity.coinEntities.CoinEntity;
+import com.kerbino.bcpredict.entity.coin.CoinEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

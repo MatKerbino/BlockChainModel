@@ -15,7 +15,7 @@ import javax.sql.DataSource;
 
 @Configuration
 @EnableJpaRepositories(
-        basePackages = "com.kerbino.bcpredict.repository.coinRepositories",
+        basePackages = "com.kerbino.bcpredict.repository.coin",
         entityManagerFactoryRef = "moneyEntityManagerFactory",
         transactionManagerRef = "moneyTransactionManager"
 )

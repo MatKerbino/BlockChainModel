@@ -1,8 +1,7 @@
-package com.kerbino.bcpredict.services.coinServices;
+package com.kerbino.bcpredict.services.coin;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.kerbino.bcpredict.services.coinServices.CoinStatsService;
-import com.kerbino.bcpredict.services.dataManipulation.JsonManipulation;
+import com.kerbino.bcpredict.utilities.JsonManipulation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -42,7 +41,7 @@ public class CoinCacheService {
                 now.toEpochMilli()
         );
 
-        if (coinPrice.get(id) == null || coinPrice.get(id).isEmpty() || result.isEmpty()) {
+        if (!coinPrice.containsKey(id) || coinPrice.get(id).isEmpty() || result.isEmpty()) {
             coinPrice.put(id, coinStatsService.getPriceInTime(id, typeCurrency, timesSpan, dailyOr));
         } else {
             coinPrice.put(id, result);

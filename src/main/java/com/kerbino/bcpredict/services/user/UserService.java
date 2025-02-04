@@ -1,4 +1,4 @@
-package com.kerbino.bcpredict.services.userServices;
+package com.kerbino.bcpredict.services.user;
 
 import org.springframework.stereotype.Service;
 

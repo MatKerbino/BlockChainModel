@@ -1,4 +1,4 @@
-package com.kerbino.bcpredict.services.dataManipulation;
+package com.kerbino.bcpredict.utilities;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;

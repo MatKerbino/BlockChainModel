@@ -1,4 +1,4 @@
-package com.kerbino.bcpredict.services.coinServices;
+package com.kerbino.bcpredict.services.coin;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -67,12 +67,13 @@ public class CoinStatsService {
 
     public List<JsonNode> getCoinList() throws IOException {
         changeUrl("https://api.coingecko.com/api/v3/coins/list");
-        Response response = client.newCall(this.request).execute();
-        if (response.isSuccessful() && response.body() != null) {
-            String jsonResponse = response.body().string();
-            return Collections.singletonList(mapper.readTree(jsonResponse));
-        } else {
-            throw new IOException("Erro ao obter a lista de moedas");
+        try (Response response = client.newCall(this.request).execute()) {
+            if (response.isSuccessful() && response.body() != null) {
+                String jsonResponse = response.body().string();
+                return Collections.singletonList(mapper.readTree(jsonResponse));
+            } else {
+                throw new IOException("Error retrieving coin list");
+            }
         }
     }
 
@@ -80,12 +81,13 @@ public class CoinStatsService {
         changeUrl(String.format(
                 "https://api.coingecko.com/api/v3/simple/price?ids=%s&vs_currencies=%s", id, typeCurrency
         ));
-        Response response = client.newCall(this.request).execute();
-        if (response.isSuccessful() && response.body() != null){
-            String jsonResponse = response.body().string();
-            return mapper.readTree(jsonResponse);
-        } else {
-            throw new IOException("Erro ao obter preço");
+        try (Response response = client.newCall(this.request).execute()) {
+            if (response.isSuccessful() && response.body() != null) {
+                String jsonResponse = response.body().string();
+                return mapper.readTree(jsonResponse);
+            } else {
+                throw new IOException("Error retrieving coin price");
+            }
         }
     }
 
@@ -96,12 +98,13 @@ public class CoinStatsService {
                         + "&precision=full",
                 id, typeCurrency, timeSpan
         ));
-        Response response = client.newCall(this.request).execute();
-        if (response.isSuccessful() && response.body() != null){
-            String jsonResponse = response.body().string();
-            return Collections.singletonList(mapper.readTree(jsonResponse));
-        } else {
-            throw new IOException("Erro ao obter preços");
+        try (Response response = client.newCall(this.request).execute()) {
+            if (response.isSuccessful() && response.body() != null) {
+                String jsonResponse = response.body().string();
+                return Collections.singletonList(mapper.readTree(jsonResponse));
+            } else {
+                throw new IOException("Error retrieving price data");
+            }
         }
     }
 }
